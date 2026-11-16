@@ -23,3 +23,23 @@ test('divide divides the first number by the second', () => {
 test('divide throws when dividing by zero', () => {
   assert.throws(() => calc.divide(1, 0), { name: 'Error', message: 'Cannot divide by zero' });
 });
+
+test('methods handle negative numbers', () => {
+  assert.equal(calc.add(-1, -2), -3);
+  assert.equal(calc.subtract(-1, 2), -3);
+  assert.equal(calc.multiply(-2, 3), -6);
+  assert.equal(calc.divide(-6, 3), -2);
+});
+
+for (const method of ['add', 'subtract', 'multiply', 'divide']) {
+  for (const bad of ['1', '0', '', null, undefined, false, NaN, {}]) {
+    test(`${method} rejects non-number operand ${String(bad)}`, () => {
+      assert.throws(() => calc[method](bad, 1), TypeError);
+      assert.throws(() => calc[method](1, bad), TypeError);
+    });
+  }
+}
+
+test('divide throws when dividing by negative zero', () => {
+  assert.throws(() => calc.divide(1, -0), { message: 'Cannot divide by zero' });
+});
